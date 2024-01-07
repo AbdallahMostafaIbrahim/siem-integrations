@@ -1,0 +1,480 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "id": 1,
+  "links": [],
+  "liveNow": false,
+  "panels": [
+    {
+      "datasource": {
+        "type": "grafana-clickhouse-datasource",
+        "uid": "f6ed646b-edd0-4763-887c-c3f91b51fc27"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "inspect": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "timestamp"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 263
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 14,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 4,
+      "options": {
+        "cellHeight": "sm",
+        "footer": {
+          "countRows": false,
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": true,
+        "sortBy": []
+      },
+      "pluginVersion": "10.2.3",
+      "targets": [
+        {
+          "builderOptions": {
+            "aggregates": [],
+            "columns": [
+              {
+                "custom": false,
+                "name": "*",
+                "type": "String"
+              }
+            ],
+            "database": "zeek",
+            "filters": [
+              {
+                "condition": "AND",
+                "filterType": "custom",
+                "key": "timestamp",
+                "operator": ">=",
+                "type": "DateTime",
+                "value": "GRAFANA_START_TIME"
+              },
+              {
+                "condition": "AND",
+                "filterType": "custom",
+                "key": "timestamp",
+                "operator": "<=",
+                "type": "DateTime",
+                "value": "GRAFANA_END_TIME"
+              }
+            ],
+            "groupBy": [],
+            "limit": 1000,
+            "meta": {},
+            "mode": "list",
+            "orderBy": [
+              {
+                "dir": "DESC",
+                "name": "timestamp"
+              }
+            ],
+            "queryType": "table",
+            "table": "conn"
+          },
+          "datasource": {
+            "type": "grafana-clickhouse-datasource",
+            "uid": "f6ed646b-edd0-4763-887c-c3f91b51fc27"
+          },
+          "editorType": "builder",
+          "format": 1,
+          "pluginVersion": "4.0.0-beta",
+          "rawSql": "SELECT * FROM \"zeek\".\"conn\" WHERE   ( timestamp >= $__fromTime ) AND ( timestamp <= $__toTime ) ORDER BY timestamp DESC LIMIT 1000",
+          "refId": "A"
+        }
+      ],
+      "title": "Connection Logs",
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "grafana-clickhouse-datasource",
+        "uid": "f6ed646b-edd0-4763-887c-c3f91b51fc27"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 10,
+        "x": 0,
+        "y": 14
+      },
+      "id": 8,
+      "options": {
+        "basemap": {
+          "config": {},
+          "name": "Layer 0",
+          "type": "default"
+        },
+        "controls": {
+          "mouseWheelZoom": true,
+          "showAttribution": true,
+          "showDebug": false,
+          "showMeasure": false,
+          "showScale": false,
+          "showZoom": true
+        },
+        "layers": [
+          {
+            "config": {
+              "blur": 11,
+              "radius": 9,
+              "weight": {
+                "field": "adj_heat",
+                "fixed": 1,
+                "max": 1,
+                "min": 0
+              }
+            },
+            "location": {
+              "geohash": "hash",
+              "mode": "geohash"
+            },
+            "name": "Layer 1",
+            "tooltip": true,
+            "type": "heatmap"
+          }
+        ],
+        "tooltip": {
+          "mode": "details"
+        },
+        "view": {
+          "allLayers": true,
+          "id": "zero",
+          "lat": 0,
+          "lon": 0,
+          "zoom": 1
+        }
+      },
+      "pluginVersion": "10.2.3",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-clickhouse-datasource",
+            "uid": "f6ed646b-edd0-4763-887c-c3f91b51fc27"
+          },
+          "editorType": "sql",
+          "format": 1,
+          "meta": {
+            "builderOptions": {
+              "columns": [],
+              "database": "",
+              "limit": 1000,
+              "mode": "list",
+              "queryType": "table",
+              "table": ""
+            }
+          },
+          "pluginVersion": "4.0.0-beta",
+          "queryType": "table",
+          "rawSql": "WITH source_coords AS (\r\n    SELECT \r\n        dictGet(\r\n            'zeek.ip_trie',\r\n            ('latitude', 'longitude'),\r\n            tuple(source_ip)\r\n        ) AS coords,\r\n        coords.1 AS source_latitude,\r\n        coords.2 AS source_longitude,\r\n        geohashEncode(coords.2, coords.1, 4) AS source_hash\r\n    FROM \r\n        zeek.conn\r\n    WHERE\r\n        coords.2 != 0 \r\n        AND coords.1 != 0\r\n        AND $__timeFilter(timestamp)\r\n),\r\ndestination_coords AS (\r\n    SELECT \r\n        dictGet(\r\n            'zeek.ip_trie',\r\n            ('latitude', 'longitude'),\r\n            tuple(destination_ip)\r\n        ) AS coords,\r\n        coords.1 AS destination_latitude,\r\n        coords.2 AS destination_longitude,\r\n        geohashEncode(coords.2, coords.1, 4) AS destination_hash\r\n    FROM \r\n        zeek.conn\r\n    WHERE\r\n        coords.2 != 0 \r\n        AND coords.1 != 0\r\n        AND $__timeFilter(timestamp)\r\n)\r\nSELECT \r\n    hash,\r\n    count() AS heat,\r\n    round(log10(heat), 2) AS adj_heat\r\nFROM (\r\n    SELECT source_hash AS hash FROM source_coords\r\n    UNION ALL\r\n    SELECT destination_hash AS hash FROM destination_coords\r\n) AS combined_hashes\r\nGROUP BY \r\n    hash;\r\n\r\n-- Old Query\r\n-- with coords as (\r\n--     select \r\n--         dictGet(\r\n--             'zeek.ip_trie',\r\n--             ('latitude', 'longitude'),\r\n--             tuple(source_ip)\r\n--         ) as coords,\r\n--         coords.1 as latitude,\r\n--         coords.2 as longitude,\r\n--         geohashEncode(longitude,latitude,4) as hash\r\n--     from \r\n--         zeek.conn\r\n--     where\r\n--         longitude != 0 \r\n--         and latitude != 0\r\n--         and $__timeFilter(timestamp)\r\n-- ) \r\n-- select \r\n--     hash, \r\n--     count() as heat, \r\n--     round(log10(heat),2) as adj_heat \r\n-- from \r\n--     coords \r\n-- group by \r\n--     hash",
+          "refId": "A"
+        }
+      ],
+      "title": "Connections From Around the world",
+      "type": "geomap"
+    },
+    {
+      "datasource": {
+        "type": "grafana-clickhouse-datasource",
+        "uid": "f6ed646b-edd0-4763-887c-c3f91b51fc27"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 14,
+        "x": 10,
+        "y": 14
+      },
+      "id": 6,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-clickhouse-datasource",
+            "uid": "f6ed646b-edd0-4763-887c-c3f91b51fc27"
+          },
+          "editorType": "sql",
+          "format": 1,
+          "meta": {
+            "builderOptions": {
+              "columns": [],
+              "database": "",
+              "limit": 1000,
+              "mode": "list",
+              "queryType": "table",
+              "table": ""
+            }
+          },
+          "pluginVersion": "4.0.0-beta",
+          "queryType": "table",
+          "rawSql": "SELECT\r\n    toStartOfMinute(timestamp) AS time,\r\n    count(*) AS connections\r\nFROM zeek.conn\r\nWHERE $__timeFilter(timestamp)\r\nGROUP BY time\r\nORDER BY time",
+          "refId": "A"
+        }
+      ],
+      "title": "Connections over time",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "grafana-clickhouse-datasource",
+        "uid": "f6ed646b-edd0-4763-887c-c3f91b51fc27"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "continuous-GrYlRd"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 24
+      },
+      "id": 7,
+      "options": {
+        "displayMode": "lcd",
+        "maxVizHeight": 300,
+        "minVizHeight": 75,
+        "minVizWidth": 75,
+        "namePlacement": "auto",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [],
+          "fields": "",
+          "values": true
+        },
+        "showUnfilled": true,
+        "sizing": "auto",
+        "valueMode": "color"
+      },
+      "pluginVersion": "10.2.3",
+      "targets": [
+        {
+          "builderOptions": {
+            "aggregates": [
+              {
+                "aggregateType": "count",
+                "alias": "",
+                "column": "uid"
+              }
+            ],
+            "columns": [],
+            "database": "zeek",
+            "filters": [],
+            "groupBy": [
+              "uri"
+            ],
+            "limit": 5,
+            "meta": {},
+            "mode": "aggregate",
+            "orderBy": [
+              {
+                "dir": "DESC",
+                "name": "count(uid)"
+              }
+            ],
+            "queryType": "table",
+            "table": "http"
+          },
+          "datasource": {
+            "type": "grafana-clickhouse-datasource",
+            "uid": "f6ed646b-edd0-4763-887c-c3f91b51fc27"
+          },
+          "editorType": "builder",
+          "format": 1,
+          "pluginVersion": "4.0.0-beta",
+          "rawSql": "SELECT uri, count(uid) FROM \"zeek\".\"http\" GROUP BY uri ORDER BY count(uid) DESC LIMIT 5",
+          "refId": "A"
+        }
+      ],
+      "title": "Top 5 URLs",
+      "type": "bargauge"
+    }
+  ],
+  "refresh": "",
+  "schemaVersion": 39,
+  "tags": [],
+  "templating": {
+    "list": []
+  },
+  "time": {
+    "from": "now-6h",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "",
+  "title": "Zeek Dashboard",
+  "uid": "b58ad2ba-d749-4c9a-8f2d-99579b75b823",
+  "version": 9,
+  "weekStart": ""
+}
