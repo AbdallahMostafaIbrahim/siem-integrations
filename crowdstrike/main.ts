@@ -130,7 +130,13 @@ async function main() {
         )
       ).flat();
 
-      // Check if the index exists
+      const explodedDetectionSummaries = detectionSummaries
+        .map((summary) => {
+          const { behaviors, ...rest } = summary;
+          return behaviors.map((behavior: any) => ({ ...rest, behavior }));
+        })
+        .flat();
+
       const { body: indexExists } = await opensearch.indices.exists({
         index: getIndexName(),
       });
@@ -143,14 +149,12 @@ async function main() {
 
       // Bulk insert detection summaries
       console.log("Inserting detection summaries...");
-      const body = detectionSummaries.flatMap((doc) => [
-        { index: { _index: getIndexName(), pipeline } },
+      const body = explodedDetectionSummaries.flatMap((doc) => [
+        { index: { _index: getIndexName() } },
         doc,
       ]);
 
-      fs.writeFileSync("body.json", JSON.stringify(body));
-
-      await opensearch.bulk({ body });
+      await opensearch.bulk({ body, pipeline });
     } catch (error) {
       console.error("Error in main:", error);
     }
