@@ -7,3 +7,4 @@ Integrations include:
 - [Fortigate](./foritgate/)
 - [Windows](./windows/)
 - [Zeek](./zeek/)
+- [Crowdstrike Detections API](./crowdstrike)
