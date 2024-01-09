@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "ts-node main.ts",
     "build": "tsc",
-    "run": "node dist/main.js"
+    "start": "node dist/main.js"
   },
   "dependencies": {
     "@opensearch-project/opensearch": "^2.4.0",

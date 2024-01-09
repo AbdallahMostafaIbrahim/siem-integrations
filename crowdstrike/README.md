@@ -31,7 +31,7 @@ To use this script, you will need to have a Crowdstrike API Client Secret and Cl
 ```
 
 4. Build the script with `npm run build`
-5. Run the script with `node dist/index.js`
+5. Run the script with `node dist/main.js`
 
 After running the script, you should see data in your Opensearch index.
 
