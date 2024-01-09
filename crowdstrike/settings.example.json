@@ -1,0 +1,18 @@
+{
+  "$schema": "./schema.json",
+  "crowdstrike": {
+    "client_id": "client_id",
+    "client_secret": "client_secret",
+    "region": "us-2"
+  },
+  "opensearch": {
+    "url": "https://opensearch:9200",
+    "username": "admin",
+    "password": "password",
+    "index": "crowdstrike",
+    "ignore_ssl": true,
+    "pipeline": ""
+  },
+  "interval": 300,
+  "script_state_file": "./state.json"
+}

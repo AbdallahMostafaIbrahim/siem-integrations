@@ -1,0 +1,59 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "crowdstrike": {
+      "type": "object",
+      "properties": {
+        "client_id": {
+          "type": "string"
+        },
+        "client_secret": {
+          "type": "string"
+        },
+        "region": {
+          "type": "string",
+          "description": "The region where the CrowdStrike API is hosted. Values like us1, us2, eu1"
+        }
+      },
+      "required": ["client_id", "client_secret", "region"]
+    },
+    "opensearch": {
+      "type": "object",
+      "properties": {
+        "url": {
+          "type": "string",
+          "description": "The URL of the OpenSearch cluster. Example: https://opensearch.example.com:9200"
+        },
+        "username": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        },
+        "index": {
+          "type": "string",
+          "description": "The name of the index to store the data in. Example: crowdstrike, It will be created if it doesn't exist in the format of crowdstrike-YYYY.MM"
+        },
+        "ignore_ssl": {
+          "type": "boolean",
+          "description": "Ignore SSL certificate errors. Set to true if you are using a self-signed certificate."
+        },
+        "pipeline": {
+          "type": "string",
+          "description": "The name of the ingest pipeline to use. Example: crowdstrike"
+        }
+      },
+      "required": ["url", "username", "password", "index", "ignore_ssl"]
+    },
+    "interval": {
+      "type": "integer",
+      "description": "The interval in seconds to run the script. Example: 300 for 5 minutes"
+    },
+    "script_state_file": {
+      "type": "string",
+      "description": "The path to the json file to store the script state in."
+    }
+  },
+  "required": ["crowdstrike", "opensearch"]
+}
