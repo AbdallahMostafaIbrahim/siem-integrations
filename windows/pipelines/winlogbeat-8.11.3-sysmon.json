@@ -519,42 +519,6 @@
       }
     },
     {
-      "set": {
-        "field": "process.pe.company",
-        "copy_from": "winlog.event_data.Company",
-        "ignore_empty_value": true,
-        "ignore_failure": true,
-        "if": "ctx.event.code != \"7\""
-      }
-    },
-    {
-      "set": {
-        "field": "process.pe.description",
-        "copy_from": "winlog.event_data.Description",
-        "ignore_empty_value": true,
-        "ignore_failure": true,
-        "if": "ctx.event.code != \"7\""
-      }
-    },
-    {
-      "set": {
-        "copy_from": "winlog.event_data.FileVersion",
-        "ignore_empty_value": true,
-        "ignore_failure": true,
-        "if": "ctx.event.code != \"7\"",
-        "field": "process.pe.file_version"
-      }
-    },
-    {
-      "set": {
-        "copy_from": "winlog.event_data.Product",
-        "ignore_empty_value": true,
-        "ignore_failure": true,
-        "if": "ctx.event.code != \"7\"",
-        "field": "process.pe.product"
-      }
-    },
-    {
       "script": {
         "if": "(ctx?.process?.command_line != null && ctx.process.command_line != \"\") || \n(ctx?.process?.parent?.command_line != null && ctx.process.parent.command_line != \"\")",
         "source": "// appendBSBytes appends n '\\\\' bytes to b and returns the resulting slice.\ndef appendBSBytes(StringBuilder b, int n) {\n    for (; n > 0; n--) {\n        b.append('\\\\');\n    }\n    return b;\n}\n\n// readNextArg splits command line string cmd into next\n// argument and command line remainder.\ndef readNextArg(String cmd) {\n    def b = new StringBuilder();\n    boolean inquote;\n    int nslash;\n    for (; cmd.length() > 0; cmd = cmd.substring(1)) {\n        def c = cmd.charAt(0);\n        if (c == (char)' ' || c == (char)0x09) {\n            if (!inquote) {\n                return [\n                    \"arg\":  appendBSBytes(b, nslash).toString(),\n                    \"rest\": cmd.substring(1)\n                ];\n            }\n        } else if (c == (char)'\"') {\n            b = appendBSBytes(b, nslash/2);\n            if (nslash%2 == 0) {\n                // use \"Prior to 2008\" rule from\n                // http://daviddeley.com/autohotkey/parameters/parameters.htm\n                // section 5.2 to deal with double double quotes\n                if (inquote && cmd.length() > 1 && cmd.charAt(1) == (char)'\"') {\n                    b.append(c);\n                    cmd = cmd.substring(1);\n                }\n                inquote = !inquote;\n            } else {\n                b.append(c);\n            }\n            nslash = 0;\n            continue;\n        } else if (c == (char)'\\\\') {\n            nslash++;\n            continue;\n        }\n        b = appendBSBytes(b, nslash);\n        nslash = 0;\n        b.append(c);\n    }\n    return [\n        \"arg\":  appendBSBytes(b, nslash).toString(), \n        \"rest\": ''\n    ];\n}\n\n// commandLineToArgv splits a command line into individual argument\n// strings, following the Windows conventions documented\n// at http://daviddeley.com/autohotkey/parameters/parameters.htm#WINARGV\n// Original implementation found at: https://github.com/golang/go/commit/39c8d2b7faed06b0e91a1ad7906231f53aab45d1\ndef commandLineToArgv(String cmd) {\n    def args = new ArrayList();\n    while (cmd.length() > 0) {\n        if (cmd.charAt(0) == (char)' ' || cmd.charAt(0) == (char)0x09) {\n            cmd = cmd.substring(1);\n            continue;\n        }\n        def next = readNextArg(cmd);\n        cmd = next.rest;\n        args.add(next.arg);\n    }\n    return args;\n}\n\ndef cmd = ctx?.process?.command_line;\nif (cmd != null && cmd != \"\") {\n  ctx.process.args = commandLineToArgv(cmd);\n  ctx.process.args_count = ctx.process.args.length;\n}\n\ndef parentCmd = ctx?.process?.parent?.command_line;\nif (parentCmd != null && parentCmd != \"\") {\n  ctx.process.parent.args = commandLineToArgv(parentCmd);\n  ctx.process.parent.args_count = ctx.process.parent.args.length;\n}",
@@ -618,64 +582,12 @@
       }
     },
     {
-      "set": {
-        "field": "file.code_signature.subject_name",
-        "copy_from": "winlog.event_data.Signature",
-        "ignore_failure": true,
-        "ignore_empty_value": true
-      }
-    },
-    {
-      "set": {
-        "ignore_failure": true,
-        "ignore_empty_value": true,
-        "field": "file.code_signature.status",
-        "copy_from": "winlog.event_data.SignatureStatus"
-      }
-    },
-    {
       "rename": {
         "if": "ctx.event.code == \"7\"",
         "field": "winlog.event_data.OriginalFileName",
         "target_field": "file.pe.original_file_name",
         "ignore_missing": true,
         "ignore_failure": true
-      }
-    },
-    {
-      "set": {
-        "if": "ctx.event.code == \"7\"",
-        "field": "file.pe.company",
-        "copy_from": "winlog.event_data.Company",
-        "ignore_failure": true,
-        "ignore_empty_value": true
-      }
-    },
-    {
-      "set": {
-        "ignore_empty_value": true,
-        "if": "ctx.event.code == \"7\"",
-        "field": "file.pe.description",
-        "copy_from": "winlog.event_data.Description",
-        "ignore_failure": true
-      }
-    },
-    {
-      "set": {
-        "copy_from": "winlog.event_data.FileVersion",
-        "ignore_failure": true,
-        "ignore_empty_value": true,
-        "if": "ctx.event.code == \"7\"",
-        "field": "file.pe.file_version"
-      }
-    },
-    {
-      "set": {
-        "copy_from": "winlog.event_data.Product",
-        "ignore_failure": true,
-        "ignore_empty_value": true,
-        "if": "ctx.event.code == \"7\"",
-        "field": "file.pe.product"
       }
     },
     {
@@ -734,15 +646,6 @@
       }
     },
     {
-      "convert": {
-        "target_field": "source.ip",
-        "type": "ip",
-        "ignore_failure": true,
-        "ignore_missing": true,
-        "field": "winlog.event_data.SourceIp"
-      }
-    },
-    {
       "rename": {
         "target_field": "source.domain",
         "ignore_missing": true,
@@ -757,15 +660,6 @@
         "ignore_failure": true,
         "ignore_missing": true,
         "field": "winlog.event_data.SourcePort"
-      }
-    },
-    {
-      "convert": {
-        "field": "winlog.event_data.DestinationIp",
-        "target_field": "destination.ip",
-        "type": "ip",
-        "ignore_failure": true,
-        "ignore_missing": true
       }
     },
     {
@@ -892,38 +786,11 @@
       }
     },
     {
-      "foreach": {
-        "field": "dns.resolved_ip",
-        "ignore_missing": true,
-        "processor": {
-          "convert": {
-            "type": "ip",
-            "on_failure": [
-              {
-                "remove": {
-                  "field": "_ingest._value"
-                }
-              }
-            ],
-            "field": "_ingest._value"
-          }
-        }
-      }
-    },
-    {
       "script": {
         "description": "Convert V4MAPPED addresses.",
         "lang": "painless",
         "if": "ctx?.dns?.resolved_ip != null",
         "source": "if (ctx.dns.answers == null) {\n  ctx.dns.answers = new ArrayList();\n}\nfor (def i = 0; i < ctx.dns.resolved_ip.length; i++) {\n  def ip = ctx.dns.resolved_ip[i];\n  if (ip == null) {\n    ctx.dns.resolved_ip.remove(i);\n    continue;\n  }\n\n  // Synthesize record type based on IP address type.\n  def type = \"A\";\n  if (ip.indexOf(\":\") != -1) {\n    type = \"AAAA\";\n  }\n  ctx.dns.answers.add([\n    \"type\": type,\n    \"data\": ip\n  ]);\n}"
-      }
-    },
-    {
-      "registered_domain": {
-        "field": "dns.question.name",
-        "target_field": "dns.question",
-        "ignore_failure": true,
-        "ignore_missing": true
       }
     },
     {
@@ -954,20 +821,6 @@
             "field": "related.ip"
           }
         }
-      }
-    },
-    {
-      "community_id": {
-        "ignore_failure": true,
-        "ignore_missing": false
-      }
-    },
-    {
-      "set": {
-        "field": "user.id",
-        "copy_from": "winlog.user.identifier",
-        "ignore_empty_value": true,
-        "ignore_failure": true
       }
     },
     {

@@ -2703,14 +2703,6 @@
       }
     },
     {
-      "set": {
-        "field": "winlog.logon.id",
-        "copy_from": "winlog.event_data.TargetLogonId",
-        "ignore_failure": false,
-        "if": "ctx?.event?.code != null && [\"4634\", \"4647\", \"4964\"].contains(ctx.event.code)"
-      }
-    },
-    {
       "script": {
         "ignore_failure": false,
         "tag": "Copy Subject User from Event Data",
@@ -2744,21 +2736,6 @@
         "description": "Copy Subject User from user_data",
         "source": "if (ctx?.event?.code == null ||\n    ![\"1102\"].contains(ctx.event.code)) {\n  return;\n}\nif (ctx?.winlog?.user_data?.SubjectUserSid != null) {\n  if (ctx?.user == null) {\n    HashMap hm = new HashMap();\n    ctx.put(\"user\", hm);\n  }\n  ctx.user.put(\"id\", ctx.winlog.user_data.SubjectUserSid);\n}\nif (ctx?.winlog?.user_data?.SubjectUserName != null) {\n  if (ctx?.user == null) {\n    HashMap hm = new HashMap();\n    ctx.put(\"user\", hm);\n  }\n  if (ctx?.related == null) {\n    HashMap hm = new HashMap();\n    ctx.put(\"related\", hm);\n  }\n  if (ctx?.related?.user == null) {\n    ArrayList al = new ArrayList();\n    ctx.related.put(\"user\", al);\n  }\n  ctx.user.put(\"name\", ctx.winlog.user_data.SubjectUserName);\n  if (!ctx.related.user.contains(ctx.winlog.user_data.SubjectUserName)) {\n    ctx.related.user.add(ctx.winlog.user_data.SubjectUserName);\n  }\n}\nif (ctx?.winlog?.user_data?.SubjectDomainName != null) {\n  if (ctx?.user == null) {\n    HashMap hm = new HashMap();\n    ctx.put(\"user\", hm);\n  }\n  ctx.user.put(\"domain\", ctx.winlog.user_data.SubjectDomainName);\n}",
         "lang": "painless"
-      }
-    },
-    {
-      "set": {
-        "field": "winlog.logon.id",
-        "copy_from": "winlog.event_data.SubjectLogonId",
-        "ignore_failure": true
-      }
-    },
-    {
-      "set": {
-        "field": "winlog.logon.id",
-        "copy_from": "winlog.user_data.SubjectLogonId",
-        "ignore_failure": true,
-        "if": "ctx?.event?.code != null &&\n[\"1102\"].contains(ctx.event.code)"
       }
     },
     {
@@ -2800,20 +2777,6 @@
         "field": "winlog.event_data.PrivilegeList",
         "separator": "\\s+",
         "if": "ctx?.event?.code != null &&\n[\"4672\", \"4673\", \"4674\", \"4741\", \"4742\", \"4743\"].contains(ctx.event.code) &&\nctx?.winlog?.event_data?.PrivilegeList != null"
-      }
-    },
-    {
-      "set": {
-        "ignore_empty_value": true,
-        "field": "user.target.name",
-        "copy_from": "winlog.event_data.OldTargetUserName"
-      }
-    },
-    {
-      "set": {
-        "ignore_empty_value": true,
-        "field": "user.changes.name",
-        "copy_from": "winlog.event_data.NewTargetUserName"
       }
     },
     {
@@ -3052,30 +3015,9 @@
     },
     {
       "set": {
-        "field": "file.name",
-        "copy_from": "winlog.event_data.RelativeTargetName",
-        "if": "ctx.event?.code != null &&\n[\"5140\", \"5145\"].contains(ctx.event.code) &&\nctx.winlog?.event_data?.RelativeTargetName != null &&\nctx.winlog.event_data.RelativeTargetName != \"\""
-      }
-    },
-    {
-      "set": {
-        "field": "file.directory",
-        "copy_from": "winlog.event_data.ShareLocalPath",
-        "if": "ctx.event?.code != null &&\n[\"5140\", \"5145\"].contains(ctx.event.code) &&\nctx.winlog?.event_data?.ShareLocalPath != null &&\nctx.winlog.event_data.ShareLocalPath != \"\""
-      }
-    },
-    {
-      "set": {
         "if": "ctx.file?.name != null && ctx.file?.directory != null",
         "field": "file.path",
         "value": "{{file.directory}}\\{{file.name}}"
-      }
-    },
-    {
-      "set": {
-        "field": "file.directory",
-        "copy_from": "winlog.event_data.ShareLocalPath",
-        "if": "ctx.event?.code != null &&\n[\"5140\", \"5145\"].contains(ctx.event.code) &&\nctx.winlog?.event_data?.ShareLocalPath != null &&\nctx.winlog.event_data.ShareLocalPath != \"\""
       }
     },
     {
@@ -3111,15 +3053,6 @@
       "set": {
         "field": "ecs.version",
         "value": "1.12.0"
-      }
-    },
-    {
-      "set": {
-        "field": "log.level",
-        "copy_from": "winlog.level",
-        "ignore_empty_value": true,
-        "ignore_failure": true,
-        "if": "ctx?.winlog?.level != \"\""
       }
     },
     {

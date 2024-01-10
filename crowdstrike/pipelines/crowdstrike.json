@@ -1,0 +1,91 @@
+{
+  "description": "Comprehensive pipeline for reorganizing and enriching CrowdStrike detection data",
+  "processors": [
+    {
+      "rename": {
+        "field": "cid",
+        "target_field": "id",
+        "ignore_missing": true
+      }
+    },
+    {
+      "rename": {
+        "field": "created_timestamp",
+        "target_field": "@timestamp",
+        "ignore_missing": true
+      }
+    },
+    {
+      "rename": {
+        "field": "detection_id",
+        "target_field": "detection.id"
+      }
+    },
+    {
+      "rename": {
+        "field": "device.hostname",
+        "target_field": "host.hostname",
+        "ignore_missing": true
+      }
+    },
+    {
+      "rename": {
+        "field": "device.local_ip",
+        "target_field": "host.ip",
+        "ignore_missing": true
+      }
+    },
+    {
+      "rename": {
+        "field": "device.machine_domain",
+        "target_field": "host.domain",
+        "ignore_missing": true
+      }
+    },
+    {
+      "rename": {
+        "field": "device.platform_name",
+        "target_field": "host.platform",
+        "ignore_missing": true
+      }
+    },
+    {
+      "rename": {
+        "field": "device.mac_address",
+        "target_field": "host.mac",
+        "ignore_missing": true
+      }
+    },
+    {
+      "rename": {
+        "field": "device.system_product_name",
+        "target_field": "host.device",
+        "ignore_missing": true
+      }
+    },
+    {
+      "remove": {
+        "field": [
+          "show_in_ui",
+          "assigned_to_uid",
+          "assigned_to_name",
+          "hostinfo",
+          "seconds_to_triaged",
+          "seconds_to_resolved",
+          "behaviors_processed",
+          "date_updated",
+          "device",
+          "email_sent"
+        ],
+        "ignore_missing": true
+      }
+    },
+    {
+      "script": {
+        "source": "\r\nctx.quarantined_hashes = ctx.quarantined_files.stream()\r\n                                    .map(f -> f.sha256)\r\n                                    .collect(Collectors.toList());\r\nctx.remove('quarantined_files');",
+        "ignore_failure": true,
+        "description": "quarantined files to quarantined hashes"
+      }
+    }
+  ]
+}

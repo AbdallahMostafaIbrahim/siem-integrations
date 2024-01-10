@@ -1,6 +1,6 @@
-import axios from "axios";
-import { readFileSync, readdirSync } from "fs";
-import { Agent } from "https";
+const axios = require("axios");
+const { readFileSync, readdirSync } = require("fs");
+const { Agent } = require("https");
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
@@ -12,20 +12,20 @@ const instance = axios.create({
 
 const settings = JSON.parse(readFileSync("./settings.json").toString());
 
-if (!settings.host) {
-  console.log("Please add host to settings.json");
+if (!settings.opensearch.url) {
+  console.log("Please add opensearch.url to settings.json");
   process.exit(1);
-} else if (!settings.username) {
-  console.log("Please add username to settings.json");
+} else if (!settings.opensearch.username) {
+  console.log("Please add opensearch.username to settings.json");
   process.exit(1);
-} else if (!settings.password) {
-  console.log("Please add password to settings.json");
+} else if (!settings.opensearch.password) {
+  console.log("Please add opensearch.password to settings.json");
   process.exit(1);
 }
 
-const USER = settings.username;
-const PASSWORD = settings.password;
-const HOST = settings.host;
+const USER = settings.opensearch.username;
+const PASSWORD = settings.opensearch.password;
+const HOST = settings.opensearch.url;
 
 const createPipelineInOpenSearch = async (name, body) => {
   const response = await instance.put(

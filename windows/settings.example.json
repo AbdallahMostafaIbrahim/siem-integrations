@@ -1,0 +1,5 @@
+{
+  "host": "https://opensearch:9200",
+  "username": "admin",
+  "password": "password"
+}

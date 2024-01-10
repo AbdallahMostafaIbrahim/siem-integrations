@@ -32,15 +32,6 @@
       }
     },
     {
-      "set": {
-        "ignore_failure": true,
-        "if": "ctx?.winlog?.level != \"\"",
-        "field": "log.level",
-        "copy_from": "winlog.level",
-        "ignore_empty_value": true
-      }
-    },
-    {
       "date": {
         "field": "winlog.time_created",
         "formats": [

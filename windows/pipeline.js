@@ -10,9 +10,22 @@ const instance = axios.create({
   }),
 });
 
-const USER = "admin";
-const PASSWORD = "password";
-const HOST = "https://ip:9200";
+const settings = JSON.parse(readFileSync("./settings.json").toString());
+
+if (!settings.host) {
+  console.log("Please add host to settings.json");
+  process.exit(1);
+} else if (!settings.username) {
+  console.log("Please add username to settings.json");
+  process.exit(1);
+} else if (!settings.password) {
+  console.log("Please add password to settings.json");
+  process.exit(1);
+}
+
+const USER = settings.username;
+const PASSWORD = settings.password;
+const HOST = settings.host;
 
 const createPipelineInOpenSearch = async (name, body) => {
   const response = await instance.put(

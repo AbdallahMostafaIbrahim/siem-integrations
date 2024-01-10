@@ -21,7 +21,17 @@ PUT _ingest/pipeline/pipline-name
 }
 ```
 
-Or use the `pipeline.js` script to them. Just change the `USER` and `PASSWORD` to your settings.
+Or use the `pipeline.js` script to them. Just create a `settings.json` file and copy paste the content of `settings.example.json` and fill in the values.
+
+```json
+{
+  "host": "https://opensearch:9200",
+  "username": "admin",
+  "password": "password"
+}
+```
+
+Then, run the script.
 
 ```
 npm install # to install the packages

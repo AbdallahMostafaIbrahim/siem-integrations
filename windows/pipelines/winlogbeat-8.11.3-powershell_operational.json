@@ -28,15 +28,6 @@
       }
     },
     {
-      "set": {
-        "field": "log.level",
-        "copy_from": "winlog.level",
-        "ignore_empty_value": true,
-        "ignore_failure": true,
-        "if": "ctx?.winlog?.level != \"\""
-      }
-    },
-    {
       "date": {
         "if": "ctx?.winlog?.time_created != null",
         "field": "winlog.time_created",
@@ -136,14 +127,6 @@
       }
     },
     {
-      "set": {
-        "field": "user.id",
-        "copy_from": "winlog.user.identifier",
-        "ignore_failure": true,
-        "ignore_empty_value": true
-      }
-    },
-    {
       "split": {
         "field": "winlog.event_data.User",
         "target_field": "_temp.user_parts",
@@ -229,24 +212,6 @@
         "ignore_missing": true,
         "if": "ctx?.source?.user != null",
         "field": "user.name"
-      }
-    },
-    {
-      "set": {
-        "ignore_failure": true,
-        "ignore_empty_value": true,
-        "if": "ctx?.source?.user != null",
-        "field": "user.domain",
-        "copy_from": "source.user.domain"
-      }
-    },
-    {
-      "set": {
-        "if": "ctx?.source?.user != null",
-        "field": "user.name",
-        "copy_from": "source.user.name",
-        "ignore_failure": true,
-        "ignore_empty_value": true
       }
     },
     {
