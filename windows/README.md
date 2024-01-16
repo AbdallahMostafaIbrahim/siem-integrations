@@ -63,6 +63,7 @@ output {
    }
 }
 ```
+This is how you can do multiple logstashes. [Link](https://chat.openai.com/share/f63091e4-11df-4e40-89f0-f5babb7d91fd)
 
 ## Winlogbeat
 
